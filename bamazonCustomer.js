@@ -17,21 +17,21 @@ connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
 
-  printStock(); 
+  customerStock();
+  purchaseItem();
 });
 
-//Prints out the current raw inventory list.
-function printStock() {
+//Prints out the current inventory list without availble quantity.
+function customerStock() {
   console.log("Here are all of the products available for purchase.\n");
   connection.query("SELECT id, product_name, price FROM products", function(err, res) {
     if (err) throw err;
     for (var j = 0; j < res.length; j++) {
-      console.log("ID: " + res[j].id + " Product: " + res[j].product_name + " Price: $" + res[j].price);
+      console.log(" Product: " + res[j].product_name + " Price: $" + res[j].price);
     }
     
   });
-  purchaseItem();
-} 
+}; 
 
 
 //Intializes user process flow. 
@@ -69,7 +69,6 @@ function purchaseItem() {
             chosenItem = results[j];
           } 
         }
-
         // determine if enough stock is available for purchase
         if (chosenItem.stock_quantity > parseInt(answer.amount)) {
           //Enough stock available to complete the purchase
@@ -89,6 +88,7 @@ function purchaseItem() {
               console.log("")
               console.log("")
               console.log("Purchase of completed!");
+              console.log("Your Total is: $" + chosenItem.price * parseInt(answer.amount))
               console.log("")
               console.log("")
               console.log("----------------------------------------")
@@ -110,8 +110,7 @@ function purchaseItem() {
         }
       });
   });
-}
-
+};
 
 
 
